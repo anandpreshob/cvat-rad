@@ -362,10 +362,12 @@ def linear_sort_shapes(shapes: Iterable) -> list:
     # it allows us use efficient linear sorting algorithm
     min_frame = None
     max_frame = None
-    d = {}
+    d: dict[int, list] = {}
     for shape in shapes:
         frame = shape["frame"]
-        d[frame] = shape
+        if frame not in d:
+            d[frame] = []
+        d[frame].append(shape)
         min_frame = frame if min_frame is None else min(frame, min_frame)
         max_frame = frame if max_frame is None else max(frame, max_frame)
 
@@ -373,5 +375,5 @@ def linear_sort_shapes(shapes: Iterable) -> list:
     if max_frame is not None:
         for i in range(min_frame, max_frame + 1):
             if i in d:
-                sorted_shapes.append(d[i])
+                sorted_shapes.extend(d[i])
     return sorted_shapes
